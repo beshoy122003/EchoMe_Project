@@ -16,7 +16,7 @@ def clear_temp():
 
 def process_request(image, audio, voice_clone=None, lang="auto"):
 
-    BASE_DIR = os.getcwd()  # F:\DEBI_Graduation_Project
+    BASE_DIR = os.getcwd()
 
     # --------- 0) Create folders ---------
     job_id, up, out = make_job()
@@ -45,10 +45,9 @@ def process_request(image, audio, voice_clone=None, lang="auto"):
 
     # --------- 2) Aya LLM ---------
     prompt = (
-    "Answer the following clearly in 5 to 6 lines only. "
-    "Keep the answer concise and do NOT exceed 4 lines:\n\n"
-    f"{transcript}"
-            )
+        "Answer the following clearly in 5 to 6 lines:\n\n"
+        f"{transcript}"
+    )
     
     reply = subprocess.check_output(["ollama", "run", "aya:8b", prompt]).decode().strip()
 
@@ -61,21 +60,28 @@ def process_request(image, audio, voice_clone=None, lang="auto"):
 
     if voice_clone:
         clone_path = os.path.abspath(save_upload(voice_clone, os.path.join(up, voice_clone.filename)))
-        tts.tts_to_file(text=reply, file_path=tts_out, speaker_wav=clone_path,
-                        language="ar" if lang.startswith("ar") else "en")
+        tts.tts_to_file(
+            text=reply, 
+            file_path=tts_out, 
+            speaker_wav=clone_path,
+            language="ar" if lang.startswith("ar") else "en"
+        )
     else:
-        tts.tts_to_file(text=reply, file_path=tts_out,
-                        language="ar" if lang.startswith("ar") else "en")
+        tts.tts_to_file(
+            text=reply, 
+            file_path=tts_out,
+            language="ar" if lang.startswith("ar") else "en"
+        )
 
-    # --------- 4) Wav2Lip ---------
+    # --------- 4) Wav2Lip (Linux / Docker version) ---------
     clear_temp()
 
     wav2lip_out = os.path.abspath(os.path.join(out, "result.mp4"))
 
-    conda_path = r"C:\Users\el_magic\anaconda3\condabin\conda.bat"
-
+    # NO WINDOWS PATHS ANYMORE
+    # This works on Linux + Docker + Render
     cmd3 = [
-        conda_path, "run", "-n", "w2l",
+        "conda", "run", "-n", "w2l",
         "python", "inference.py",
         "--checkpoint_path", "checkpoints/wav2lip_gan.pth",
         "--face", img_path,
@@ -86,16 +92,15 @@ def process_request(image, audio, voice_clone=None, lang="auto"):
 
     result = subprocess.run(
         cmd3,
-        shell=True,
         cwd=os.path.join(BASE_DIR, "models", "Wav2Lip"),
         capture_output=True,
         text=True
     )
 
-    print(result.stdout)
-    print(result.stderr)
+    print("Wav2Lip stdout:", result.stdout)
+    print("Wav2Lip stderr:", result.stderr)
 
     if not os.path.exists(wav2lip_out):
-        raise FileNotFoundError("Wav2Lip failed! Check absolute paths.")
+        raise FileNotFoundError("Wav2Lip failed! Check checkpoints and Linux env.")
 
     return wav2lip_out, transcript, reply
