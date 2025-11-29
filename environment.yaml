@@ -1,0 +1,35 @@
+name: echome
+channels:
+  - nvidia
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+  - numpy
+  - librosa
+  - ffmpeg
+  - opencv
+  - pip
+  - pip:
+      - flask
+      - gradio
+      - transformers
+      - accelerate
+      - bitsandbytes
+      - sentencepiece
+      - diffusers
+      - safetensors
+      - resemble-perth
+      - openai-whisper
+      - faster-whisper
+      - tqdm
+      - soundfile
+      - aiohttp
+      - websocket-client
+      - moviepy
+      - huggingface-hub

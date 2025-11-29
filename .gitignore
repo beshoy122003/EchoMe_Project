@@ -1,0 +1,29 @@
+# Node
+frontend/node_modules/
+frontend/.env
+
+# Python
+api/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+
+# AI Models (HUGE - do NOT upload)
+models/
+checkpoints/
+TTS/
+Wav2Lip/
+
+# Outputs & temp files
+uploads/
+outputs/
+
+# Environment files
+.env
+*.env
+venv/
+env/
+
+# System files
+.DS_Store
+Thumbs.db
