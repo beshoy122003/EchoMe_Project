@@ -31,12 +31,18 @@ from fastapi.responses import FileResponse, Response
 @app.get("/video")
 def get_video(path: str):
     try:
-        headers = {
-            "Accept-Ranges": "bytes",
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "video/mp4"
-        }
-        return FileResponse(path, headers=headers)
+        return FileResponse(
+            path,
+            media_type="video/mp4",
+            filename="result.mp4",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0"
+            }
+        )
     except Exception as e:
         return Response(content=str(e), status_code=500)
+
 

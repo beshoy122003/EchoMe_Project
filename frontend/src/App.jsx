@@ -13,10 +13,8 @@ import VideoPreview from "./components/VideoPreview";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function App() {
-  // Main states
   const [faceImage, setFaceImage] = useState(null);
   const [voiceCloneFile, setVoiceCloneFile] = useState(null);
-
   const [audioFile, setAudioFile] = useState(null);
   const [audioURL, setAudioURL] = useState(null);
 
@@ -41,15 +39,10 @@ export default function App() {
 
     mediaRecorderRef.current.onstop = () => {
       const blob = new Blob(chunks.current, { type: "audio/wav" });
-
-      // ملف الصوت اللي هيتبعت للباك
-      const file = new File([blob], "recorded.wav", {
-        type: "audio/wav",
-      });
+      const file = new File([blob], "recorded.wav", { type: "audio/wav" });
 
       setAudioFile(file);
       setAudioURL(URL.createObjectURL(blob));
-
       chunks.current = [];
     };
 
@@ -79,23 +72,30 @@ export default function App() {
     form.append("lang", "auto");
 
     try {
-      // STEP 1: POST /process
+      // STEP 1 — POST /process
       const res = await axios.post(`${API_URL}/process`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       const videoPath = res.data.video_path;
 
-      // STEP 2: GET /video
-      const videoBlob = await axios.get(`${API_URL}/video`, {
+      // STEP 2 — GET /video (fixed version!)
+      const videoResponse = await axios({
+        url: `${API_URL}/video`,
+        method: "GET",
         params: { path: videoPath },
-        responseType: "blob",
+        responseType: "arraybuffer",
+        headers: {
+          Accept: "video/mp4",
+        },
       });
 
-      const url = URL.createObjectURL(videoBlob.data);
+      const blob = new Blob([videoResponse.data], { type: "video/mp4" });
+      const url = URL.createObjectURL(blob);
+
       setVideoURL(url);
     } catch (error) {
-      console.error(error);
+      console.error("Video Generation Error:", error);
       alert("Error generating video. Check console.");
     }
 
@@ -109,18 +109,12 @@ export default function App() {
   return (
     <div className="min-h-screen bg-transparent text-white">
       <main className="flex flex-col items-center justify-center py-12">
-        
         <HeroTitle />
 
         <div className="mt-12 w-full max-w-3xl">
-
-          {/* Upload Image */}
           <UploadArea setFaceImage={setFaceImage} />
-
-          {/* Upload Voice Clone */}
           <VoiceCloneUpload setVoiceCloneFile={setVoiceCloneFile} />
 
-          {/* Audio Recorder */}
           <AudioRecorder
             setAudioFile={setAudioFile}
             audioURL={audioURL}
@@ -129,13 +123,8 @@ export default function App() {
             stopRecording={stopRecording}
           />
 
-          {/* Generate */}
-          <GenerateButton
-            isLoading={isLoading}
-            onClick={generateVideo}
-          />
+          <GenerateButton isLoading={isLoading} onClick={generateVideo} />
 
-          {/* Video Result */}
           <VideoPreview videoURL={videoURL} />
         </div>
       </main>
