@@ -10,6 +10,8 @@ import AudioRecorder from "./components/AudioRecorder";
 import GenerateButton from "./components/GenerateButton";
 import VideoPreview from "./components/VideoPreview";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function App() {
   // Main states
   const [faceImage, setFaceImage] = useState(null);
@@ -78,14 +80,14 @@ export default function App() {
 
     try {
       // STEP 1: POST /process
-      const res = await axios.post("http://localhost:8000/process", form, {
+      const res = await axios.post(`${API_URL}/process`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       const videoPath = res.data.video_path;
 
       // STEP 2: GET /video
-      const videoBlob = await axios.get("http://localhost:8000/video", {
+      const videoBlob = await axios.get(`${API_URL}/video`, {
         params: { path: videoPath },
         responseType: "blob",
       });
