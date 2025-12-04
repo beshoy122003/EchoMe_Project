@@ -8,22 +8,22 @@ __pycache__/
 *.pyc
 *.pyo
 
-# AI Models (HUGE - do NOT upload)
+# Models & checkpoints (do NOT push)
 models/
 checkpoints/
 TTS/
 Wav2Lip/
 
-# Outputs & temp files
+# Outputs & uploads
 uploads/
 outputs/
 
-# Environment files
+# Env & venv
 .env
 *.env
 venv/
 env/
 
-# System files
+# OS
 .DS_Store
 Thumbs.db

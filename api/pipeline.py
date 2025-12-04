@@ -1,6 +1,6 @@
 import os
 import subprocess
-from api.utils import make_job, save_upload
+from api.utils import save_upload, make_job
 from TTS.api import TTS
 
 
@@ -16,15 +16,14 @@ def clear_temp():
 
 def process_request(image, audio, voice_clone=None, lang="auto"):
 
-    BASE_DIR = os.getcwd()  # F:\DEBI_Graduation_Project
+    BASE_DIR = os.getcwd()
 
-    # --------- 0) Create folders ---------
     job_id, up, out = make_job()
 
     img_path = os.path.abspath(save_upload(image, os.path.join(up, image.filename)))
     audio_path = os.path.abspath(save_upload(audio, os.path.join(up, audio.filename)))
 
-    # --------- 1) Whisper ---------
+    # ---------- Whisper ----------
     whisper_out = os.path.join(out, "transcript.txt")
 
     if lang == "auto":
@@ -36,38 +35,44 @@ def process_request(image, audio, voice_clone=None, lang="auto"):
 
     txt_files = [f for f in os.listdir(out) if f.endswith(".txt")]
     if not txt_files:
-        raise FileNotFoundError("Whisper did not generate transcript.")
+        raise FileNotFoundError("Whisper transcript missing!")
 
     os.rename(os.path.join(out, txt_files[0]), whisper_out)
 
     with open(whisper_out, "r", encoding="utf-8") as f:
         transcript = f.read().strip()
 
-    # --------- 2) Aya LLM ---------
+    # ---------- Aya LLM (Ollama local) ----------
     prompt = (
-    "Answer the following clearly in 5 to 6 lines only. "
-    "Keep the answer concise and do NOT exceed 4 lines:\n\n"
-    f"{transcript}"
-            )
-    
+        "Answer clearly in 4-5 lines maximum:\n\n"
+        f"{transcript}"
+    )
+
     reply = subprocess.check_output(["ollama", "run", "aya:8b", prompt]).decode().strip()
 
     with open(os.path.join(out, "reply.txt"), "w", encoding="utf-8") as f:
         f.write(reply)
 
-    # --------- 3) TTS ---------
+    # ---------- TTS ----------
     tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2")
     tts_out = os.path.abspath(os.path.join(out, "tts.wav"))
 
     if voice_clone:
         clone_path = os.path.abspath(save_upload(voice_clone, os.path.join(up, voice_clone.filename)))
-        tts.tts_to_file(text=reply, file_path=tts_out, speaker_wav=clone_path,
-                        language="ar" if lang.startswith("ar") else "en")
+        tts.tts_to_file(
+            text=reply,
+            file_path=tts_out,
+            speaker_wav=clone_path,
+            language="en",
+        )
     else:
-        tts.tts_to_file(text=reply, file_path=tts_out,
-                        language="ar" if lang.startswith("ar") else "en")
+        tts.tts_to_file(
+            text=reply,
+            file_path=tts_out,
+            language="en",
+        )
 
-    # --------- 4) Wav2Lip ---------
+    # ---------- Wav2Lip ----------
     clear_temp()
 
     wav2lip_out = os.path.abspath(os.path.join(out, "result.mp4"))
@@ -81,7 +86,7 @@ def process_request(image, audio, voice_clone=None, lang="auto"):
         "--face", img_path,
         "--audio", tts_out,
         "--outfile", wav2lip_out,
-        "--static", "True"
+        "--static", "True",
     ]
 
     result = subprocess.run(
@@ -89,13 +94,10 @@ def process_request(image, audio, voice_clone=None, lang="auto"):
         shell=True,
         cwd=os.path.join(BASE_DIR, "models", "Wav2Lip"),
         capture_output=True,
-        text=True
+        text=True,
     )
 
     print(result.stdout)
     print(result.stderr)
-
-    if not os.path.exists(wav2lip_out):
-        raise FileNotFoundError("Wav2Lip failed! Check absolute paths.")
 
     return wav2lip_out, transcript, reply
