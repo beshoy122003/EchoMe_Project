@@ -1,29 +1,43 @@
-# Node
+# -------------------------
+# Node (Frontend)
+# -------------------------
 frontend/node_modules/
+frontend/dist/
 frontend/.env
 
-# Python
+# -------------------------
+# Python (Backend)
+# -------------------------
 api/__pycache__/
 __pycache__/
 *.pyc
 *.pyo
 
-# Models & checkpoints (do NOT push)
+# -------------------------
+# AI Models (HUGE — DO NOT PUSH)
+# -------------------------
 models/
 checkpoints/
 TTS/
 Wav2Lip/
 
-# Outputs & uploads
+# -------------------------
+# Generated Outputs
+# -------------------------
 uploads/
 outputs/
 
-# Env & venv
+# -------------------------
+# Environments
+# -------------------------
 .env
 *.env
 venv/
 env/
 
-# OS
+# -------------------------
+# IDE / OS
+# -------------------------
+.vscode/
 .DS_Store
 Thumbs.db

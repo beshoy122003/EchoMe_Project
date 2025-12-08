@@ -1,30 +1,41 @@
 # EchoMe — Multimodal Conversational Avatar System
 
-EchoMe is a fully local (offline) AI-driven avatar system that generates a lip-synced talking video using a static face image, a cloned voice sample, and a recorded user question.
-The backend integrates Whisper for transcription, Aya 8B for response generation, XTTS for voice synthesis, and Wav2Lip for realistic lip-sync.
-The frontend is built using React, Vite, and TailwindCSS.
+EchoMe is a local multimodal AI pipeline that generates a lip-synced talking-avatar video from three user inputs:
 
-## 1. Key Features
+* A static face image
+* A short voice sample for cloning
+* A recorded question
 
-* Speech-to-text transcription using Whisper Large-v3
-* LLM-based response generation using Aya 8B (via Ollama)
-* Voice cloning and text-to-speech using XTTS v2
-* Lip-sync video generation using Wav2Lip
-* Fully offline execution
-* Modern UI using React + Vite + TailwindCSS
-* High privacy — all processing stays local
+The system produces a natural spoken response using Whisper for transcription, an LLM for reasoning, XTTS for voice synthesis, and Wav2Lip for lip-sync generation.
+The frontend is built with React (Vite + TailwindCSS), while the backend runs on FastAPI.
+
+---
+
+## 1. Features
+
+* Speech-to-text transcription (Whisper Large-v3)
+* LLM-based response generation (Aya 8B via Ollama)
+* Voice cloning and text-to-speech (XTTS v2)
+* Lip-synchronized video generation (Wav2Lip)
+* Fully local pipeline (no external computation required)
+* FastAPI backend and modern React frontend
+* Privacy-focused architecture: all processing runs locally
+
+---
 
 ## 2. System Architecture
 
 Processing pipeline:
 
 ```
-Audio Input → Whisper → Aya LLM → XTTS → Wav2Lip → MP4 Output
+Audio Recording → Whisper → LLM → XTTS → Wav2Lip → MP4 Output
 ```
 
-**Frontend:** React, Vite, TailwindCSS
-**Backend:** FastAPI, Python 3.10, Torch
-**Runtime Tools:** Ollama (Aya 8B), CUDA (optional)
+**Frontend**: React, Vite, TailwindCSS
+**Backend**: FastAPI, Python 3.10, PyTorch
+**Optional Runtime Tools**: Ollama, CUDA GPU acceleration
+
+---
 
 ## 3. Project Structure
 
@@ -32,24 +43,28 @@ Audio Input → Whisper → Aya LLM → XTTS → Wav2Lip → MP4 Output
 EchoMe_Project/
 │
 ├── api/
-│   ├── main.py
-│   ├── pipeline.py
-│   └── utils.py
+│   ├── main.py               # FastAPI application
+│   ├── pipeline.py           # Full processing pipeline
+│   ├── utils.py              # File-handling helpers
+│   ├── requirements_echome.txt
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── App.jsx
+│   │   ├── main.jsx
 │   │   └── components/
 │   ├── index.html
 │   ├── package.json
 │   └── tailwind.config.js
 │
-├── models/              # (Not included in repo)
-├── uploads/             # Temporary upload files
-├── outputs/             # Generated output files
-├── demo/                # Demo videos (added later)
-└── environment.yaml     # Conda environment
+├── models/                   # Not included in the repo
+├── uploads/                  # Temporary user uploads
+├── outputs/                  # Generated MP4 files
+├── environment.yaml          # Conda environment file
+└── README.md
 ```
+
+---
 
 ## 4. Installation
 
@@ -58,6 +73,7 @@ EchoMe_Project/
 ```bash
 conda env create -f environment.yaml
 conda activate echome
+pip install -r api/requirements_echome.txt
 uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
@@ -69,33 +85,44 @@ npm install
 npm run dev
 ```
 
-## 5. How It Works
+---
 
-1. User records an audio question
-2. Whisper transcribes the speech
-3. Aya 8B LLM generates a concise reply
-4. XTTS synthesizes the response using the cloned voice
-5. Wav2Lip creates a lip-synced talking video
-6. The frontend displays the final MP4 result
+## 5. Processing Workflow
+
+1. User records an audio question from the frontend
+2. Whisper transcribes the audio to text
+3. An LLM generates a short response
+4. XTTS synthesizes the reply using the cloned voice
+5. Wav2Lip produces a synchronized talking-head video
+6. The React frontend receives and displays the final MP4 file
+
+---
 
 ## 6. Use Cases
 
-* AI assistants
-* Virtual tutors
-* Interactive character systems
-* Customer service avatars
-* Accessibility tools
-* Creative applications
+* Interactive AI assistants
+* Virtual tutoring systems
+* Character-based conversational agents
+* Customer support avatars
+* Accessibility and educational applications
+* Creative multimedia production
+
+---
 
 ## 7. Demo
 
-Demo videos will be stored in the `demo/` folder.
-More demos will be added soon.
+Demo videos can be stored in the `demo/` folder.
+Additional examples may be added later.
+
+---
 
 ## 8. Contributing
 
-Contributions and improvements are welcome.
+Feedback and contributions are welcome.
+Please submit issues or pull requests through GitHub.
+
+---
 
 ## 9. License
 
-MIT License
+MIT License.
