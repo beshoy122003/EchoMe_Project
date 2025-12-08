@@ -1,25 +1,37 @@
+
+```md
+<p align="center">
+  <img src="frontend/public/EchoMe.png" width="420" />
+</p>
+
 # EchoMe — Multimodal Conversational Avatar System
 
-EchoMe is a local multimodal AI pipeline that generates a lip-synced talking-avatar video from three user inputs:
+EchoMe is a local multimodal AI system that generates a lip-synced talking-avatar video from three user inputs:
 
-* A static face image
-* A short voice sample for cloning
-* A recorded question
+* A static face image  
+* A short voice sample for cloning  
+* A recorded audio question  
 
-The system produces a natural spoken response using Whisper for transcription, an LLM for reasoning, XTTS for voice synthesis, and Wav2Lip for lip-sync generation.
+The backend uses Whisper for transcription, an LLM for response generation, XTTS for voice synthesis, and Wav2Lip for realistic lip-sync.  
 The frontend is built with React (Vite + TailwindCSS), while the backend runs on FastAPI.
 
 ---
 
 ## 1. Features
 
-* Speech-to-text transcription (Whisper Large-v3)
-* LLM-based response generation (Aya 8B via Ollama)
-* Voice cloning and text-to-speech (XTTS v2)
-* Lip-synchronized video generation (Wav2Lip)
-* Fully local pipeline (no external computation required)
-* FastAPI backend and modern React frontend
-* Privacy-focused architecture: all processing runs locally
+* Speech-to-text transcription (Whisper Large-v3)  
+* LLM-based response generation  
+* Voice cloning and text-to-speech (XTTS v2)  
+* Lip-synchronized video generation (Wav2Lip)  
+* Fully local pipeline (no cloud processing required)  
+* FastAPI backend with a modern React frontend  
+* Privacy-focused architecture — all computation stays local  
+
+### Supported Languages
+
+EchoMe supports transcription, reasoning, and speech output in:
+
+**English, Spanish, French, German, Italian, Portuguese, Polish, Turkish, Russian, Ukrainian, Arabic, Chinese**
 
 ---
 
@@ -28,27 +40,32 @@ The frontend is built with React (Vite + TailwindCSS), while the backend runs on
 Processing pipeline:
 
 ```
+
 Audio Recording → Whisper → LLM → XTTS → Wav2Lip → MP4 Output
+
 ```
 
-**Frontend**: React, Vite, TailwindCSS
-**Backend**: FastAPI, Python 3.10, PyTorch
-**Optional Runtime Tools**: Ollama, CUDA GPU acceleration
+**Frontend:** React, Vite, TailwindCSS  
+**Backend:** FastAPI, Python 3.10, PyTorch  
+**Optional:** CUDA GPU acceleration
 
 ---
 
 ## 3. Project Structure
 
 ```
+
 EchoMe_Project/
 │
 ├── api/
-│   ├── main.py               # FastAPI application
-│   ├── pipeline.py           # Full processing pipeline
-│   ├── utils.py              # File-handling helpers
+│   ├── main.py                 # FastAPI application
+│   ├── pipeline.py             # Full processing pipeline
+│   ├── utils.py                # File utilities
 │   ├── requirements_echome.txt
 │
 ├── frontend/
+│   ├── public/
+│   │   └── EchoMe.png          # Project banner image
 │   ├── src/
 │   │   ├── App.jsx
 │   │   ├── main.jsx
@@ -57,13 +74,14 @@ EchoMe_Project/
 │   ├── package.json
 │   └── tailwind.config.js
 │
-├── demo/                     # Demo videos
-├── models/                   # Not included in the repo
-├── uploads/                  # Temporary user uploads
-├── outputs/                  # Generated MP4 files
-├── environment.yaml          # Conda environment file
+├── demo/                       # Downloadable demo videos
+├── models/                     # Not included in repo
+├── uploads/                    # Temporary user uploads
+├── outputs/                    # Generated MP4 files
+├── environment.yaml            # Conda environment file
 └── README.md
-```
+
+````
 
 ---
 
@@ -76,7 +94,7 @@ conda env create -f environment.yaml
 conda activate echome
 pip install -r api/requirements_echome.txt
 uvicorn api.main:app --host 0.0.0.0 --port 8000
-```
+````
 
 ### Frontend Setup
 
@@ -90,43 +108,41 @@ npm run dev
 
 ## 5. Processing Workflow
 
-1. User records an audio question from the frontend
-2. Whisper transcribes the audio to text
-3. An LLM generates a short response
-4. XTTS synthesizes the reply using the cloned voice
-5. Wav2Lip produces a synchronized talking-head video
-6. The React frontend receives and displays the final MP4 file
+1. The user records an audio question in the frontend.
+2. Whisper converts the speech to text.
+3. The LLM generates a concise response.
+4. XTTS synthesizes the answer using the cloned voice.
+5. Wav2Lip generates a synchronized talking-avatar video.
+6. The frontend displays the final MP4 output.
 
 ---
 
 ## 6. Use Cases
 
 * Interactive AI assistants
-* Virtual tutoring systems
-* Character-based conversational agents
-* Customer support avatars
-* Accessibility and educational applications
-* Creative multimedia production
+* Educational and tutoring systems
+* Character-based conversational avatars
+* Customer support interfaces
+* Accessibility and communication tools
+* Creative video and content generation
 
 ---
 
 ## 7. Demo Videos
 
-### Arabic Demo
-[▶️ Watch EchoMe Arabic Demo](demo/EchoMe_Ar_demo.mp4)
-
-### English Demo
-[▶️ Watch EchoMe English Demo](demo/EchoMe_En_demo.mp4)
+Demo videos can be downloaded from the **demo/** folder in this repository.
+(Direct preview is disabled due to GitHub file size limits.)
 
 ---
 
 ## 8. Contributing
 
-Feedback and contributions are welcome.
-Please submit issues or pull requests through GitHub.
+Contributions, feedback, and improvements are welcome.
+Please open an issue or submit a pull request.
 
 ---
 
 ## 9. License
 
 MIT License.
+
