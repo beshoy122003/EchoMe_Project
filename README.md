@@ -57,6 +57,7 @@ EchoMe_Project/
 │   ├── package.json
 │   └── tailwind.config.js
 │
+├── demo/                     # Demo videos
 ├── models/                   # Not included in the repo
 ├── uploads/                  # Temporary user uploads
 ├── outputs/                  # Generated MP4 files
@@ -109,10 +110,13 @@ npm run dev
 
 ---
 
-## 7. Demo
+## 7. Demo Videos
 
-Demo videos can be stored in the `demo/` folder.
-Additional examples may be added later.
+### Arabic Demo
+[▶️ Watch EchoMe Arabic Demo](demo/EchoMe_Ar_demo.mp4)
+
+### English Demo
+[▶️ Watch EchoMe English Demo](demo/EchoMe_En_demo.mp4)
 
 ---
 
